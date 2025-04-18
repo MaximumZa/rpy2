@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rpy2 Documentation</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        // Simple toggle for sidebar navigation on small screens
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('sidebar-collapsed');
+        }
+
+        // Accordion toggle for sidebar sections
+        document.addEventListener('DOMContentLoaded', () => {
+            const accHeaders = document.querySelectorAll('.sidebar-nav .accordion-header');
+            accHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const panel = header.nextElementSibling;
+                    const isOpen = panel.style.maxHeight && panel.style.maxHeight !== '0px';
+                    // Close all panels
+                    document.querySelectorAll('.sidebar-nav .accordion-panel').forEach(p => p.style.maxHeight = '0px');
+                    if (!isOpen) {
+                        panel.style.maxHeight = panel.scrollHeight + 'px';
+                    }
+                });
+            });
+        });
+
+        // Toggle dark/light mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            
+            // Update button text
+            const modeToggle = document.getElementById('mode-toggle');
+            modeToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+
+        // Check for saved user preference
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('mode-toggle').textContent = '☀️ Light Mode';
+            }
+            
+            // Set up smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Mark sidebar item as active
+                    document.querySelectorAll('.sidebar-nav a').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+            
+            // Code copy functionality
+            document.querySelectorAll('.code-container').forEach(container => {
+                const copyBtn = container.querySelector('.copy-btn');
+                const codeBlock = container.querySelector('code');
+                
+                copyBtn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(codeBlock.textContent);
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>rpy2 Docs</h2>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">☰</button>
+            </div>
+            
+            <!-- Search box in sidebar -->
+            <div class="sidebar-search">
+                <input type="text" placeholder="Search documentation..." aria-label="Search documentation">
+                <button aria-label="Search">🔍</button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#getting-started">Getting Started</a></li>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#api-reference">API Reference</a></li>
+                    <li><a href="#tutorials">Tutorials</a></li>
+                    <li><a href="#examples">Examples</a></li>
+                    <li><a href="#community">Community</a></li>
+                    <li><a href="#advanced-topics">Advanced Topics</a></li>
+                    <li><a href="#recent-updates">Recent Updates</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button id="mode-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content">
+            <header class="content-header">
+                <h1>Welcome to the rpy2 Documentation</h1>
+                <p class="intro">Explore the powerful integration of Python and R with rpy2, enabling seamless data analysis and visualization workflows.</p>
+                
+                <!-- Version selector and language dropdown -->
+                <div class="header-options">
+                    <select class="version-select" aria-label="Version selector">
+                        <option>Version 3.5.17 (latest)</option>
+                        <option>Version 3.5.13</option>
+                        <option>Version 3.4.5</option>
+                        <option>Version 2.9.0</option>
+                    </select>
+                    
+                    <select class="language-select" aria-label="Language selector">
+                        <option>English</option>
+                        <option>Français</option>
+                        <option>Deutsch</option>
+                        <option>日本語</option>
+                    </select>
+                </div>
+            </header>
+            
+            <section id="getting-started" class="content-section">
+                <h2>What is rpy2?</h2>
+                <p>rpy2 is a powerful Python package that provides a bridge between Python and the R programming language. It allows data scientists and researchers to seamlessly integrate R's statistical capabilities and specialized packages with Python's versatile ecosystem, enabling the best of both worlds in a single workflow.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>Direct R Interface</h3>
+                        <p>Call R functions directly from Python and access R objects with native Python syntax.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Data Conversion</h3>
+                        <p>Seamlessly convert between R and Python data structures (DataFrames, vectors, etc).</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Graphics Support</h3>
+                        <p>Use R's powerful plotting capabilities like ggplot2 from within Python.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Active Ecosystem</h3>
+                        <p>Benefit from continuous development and an active community of users.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="installation" class="content-section">
+                <h2>Installation</h2>
+                <p>Install rpy2 easily using pip:</p>
+                
+                <div class="code-container">
+                    <pre><code>pip install rpy2</code></pre>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                
+                <div class="expandable-section">
+                    <div class="expandable-header">
+                        <h3>System Requirements</h3>
+                        <button class="expand-btn">+</button>
+                    </div>
+                    <div class="expandable-content">
+                        <ul>
+                            <li>Python 3.7 or higher</li>
+                            <li>R 3.6.0 or higher</li>
+                            <li>Development tools (gcc/clang)</li>
+                            <li>Required system libraries</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="installation-tabs">
+                    <div class="tab-headers">
+                        <button class="tab-btn active" data-target="linux">Linux</button>
+                        <button class="tab-btn" data-target="macos">macOS</button>
+                        <button class="tab-btn" data-target="windows">Windows</button>
+                    </div>
+                    <div class="tab-content active" id="linux">
+                        <p>Install system dependencies first:</p>
+                        <div class="code-container">
+                            <pre><code>sudo apt-get install r-base r-base-dev</code></pre>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="macos">
+                        <p>Using Homebrew:</p>
+                        <div class="code-container">
+                            <pre><code>brew install r</code></pre>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="windows">
+                        <p>Install R from <a href="https://cran.r-project.org/bin/windows/base/">CRAN</a> and ensure R's bin directory is in your PATH.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="api-reference" class="content-section">
+                <h2>API Reference</h2>
+                <p>Explore the comprehensive API documentation to understand the available classes, methods, and functions.</p>
+                
+                <div class="search-api">
+                    <input type="text" placeholder="Search API..." aria-label="Search API">
+                </div>
+                
+                <ul>
+                    <li><a href="https://rpy2.github.io/doc/latest/html/robjects.html">rpy2.robjects</a>: Interface to R objects</li>
+                    <li><a href="https://rpy2.github.io/doc/latest/html/pandas.html">Pandas Integration</a>: Conversion utilities between Pandas and R data frames</li>
+                    <li><a href="https://rpy2.github.io/doc/latest/html/graphics.html">Graphics Module</a>: Working with R graphics in Python</li>
+                </ul>
+                
+                <div class="api-explorer">
+                    <h3>Quick Reference</h3>
+                    <div class="api-tree">
+                        <details>
+                            <summary>rpy2.robjects</summary>
+                            <ul>
+                                <li>r (Function)</li>
+                                <li>FloatVector (Class)</li>
+                                <li>IntVector (Class)</li>
+                                <li>StrVector (Class)</li>
+                                <li>DataFrame (Class)</li>
+                            </ul>
+                        </details>
+                        <details>
+                            <summary>rpy2.robjects.packages</summary>
+                            <ul>
+                                <li>importr() (Function)</li>
+                                <li>data() (Function)</li>
+                                <li>Package (Class)</li>
+                            </ul>
+                        </details>
+                        <details>
+                            <summary>rpy2.robjects.pandas2ri</summary>
+                            <ul>
+                                <li>activate() (Function)</li>
+                                <li>py2rpy() (Function)</li>
+                                <li>rpy2py() (Function)</li>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tutorials" class="content-section">
+                <h2>Tutorials and Guides</h2>
+                <div class="tutorial-cards">
+                    <div class="tutorial-card">
+                        <h3>Getting Started with rpy2</h3>
+                        <p>A beginner-friendly guide to setting up rpy2 and understanding its core components.</p>
+                        <div class="tutorial-progress">
+                            <div class="progress-bar" style="width: 15%"></div>
+                            <span>15 min read</span>
+                        </div>
+                        <a href="https://rpy2.github.io/doc/latest/html/overview.html" class="tutorial-link">Read Tutorial</a>
+                    </div>
+                    
+                    <div class="tutorial-card">
+                        <h3>Pandas and R DataFrame Integration</h3>
+                        <p>Learn how to convert between Pandas DataFrames and R data frames seamlessly.</p>
+                        <div class="tutorial-progress">
+                            <div class="progress-bar" style="width: 25%"></div>
+                            <span>25 min read</span>
+                        </div>
+                        <a href="https://rpy2.github.io/doc/latest/html/pandas.html" class="tutorial-link">Read Tutorial</a>
+                    </div>
+                    
+                    <div class="tutorial-card">
+                        <h3>Calling R from Python</h3>
+                        <p>Practical examples showing how to leverage R functionality in Python statistical analysis.</p>
+                        <div class="tutorial-progress">
+                            <div class="progress-bar" style="width: 20%"></div>
+                            <span>20 min read</span>
+                        </div>
+                        <a href="https://www.statsmodels.org/stable/rpy2_examples.html" class="tutorial-link">Read Tutorial</a>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="examples" class="content-section">
+                <h2>Code Examples</h2>
+                <p>Learn by example with these practical code snippets demonstrating rpy2 functionality.</p>
+                
+                <div class="code-tabs">
+                    <div class="tab-headers">
+                        <button class="tab-btn active" data-target="basic">Basic Usage</button>
+                        <button class="tab-btn" data-target="dataframes">DataFrame Conversion</button>
+                        <button class="tab-btn" data-target="ggplot">ggplot2 Graphics</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="basic">
+                        <div class="code-container">
+                            <pre><code>import rpy2.robjects as robjects
+
+# Execute R code
+robjects.r('''
+    x <- rnorm(100)
+    mean_x <- mean(x)
+    sd_x <- sd(x)
+''')
+
+# Access R variables from Python
+mean_x = robjects.r['mean_x']
+sd_x = robjects.r['sd_x']
+
+print(f"Mean: {mean_x[0]}, Standard Deviation: {sd_x[0]}")</code></pre>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="dataframes">
+                        <div class="code-container">
+                            <pre><code>import pandas as pd
+import rpy2.robjects as ro
+from rpy2.robjects import pandas2ri
+from rpy2.robjects.packages import importr
+
+# Activate conversion between pandas and R
+pandas2ri.activate()
+
+# Create pandas DataFrame
+pdf = pd.DataFrame({
+    'a': [1, 2, 3, 4, 5],
+    'b': ['a', 'b', 'c', 'd', 'e'],
+    'c': [True, False, True, False, True]
+})
+
+# Convert to R DataFrame
+rdf = pandas2ri.py2rpy(pdf)
+
+# Use R functions on the dataframe
+stats = importr('stats')
+result = stats.aggregate(rdf.rx2('a'), rdf.rx2('c'), ro.r('mean'))
+
+# Convert result back to Python
+py_result = pandas2ri.rpy2py(result)</code></pre>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="ggplot">
+                        <div class="code-container">
+                            <pre><code>import rpy2.robjects as ro
+from rpy2.robjects.packages import importr
+from rpy2.robjects import pandas2ri
+import pandas as pd
+
+# Activate pandas to R conversion
+pandas2ri.activate()
+
+# Import ggplot2 and other packages
+ggplot2 = importr('ggplot2')
+datasets = importr('datasets')
+
+# Get mtcars dataset
+mtcars = ro.r('mtcars')
+# For Python object
+mtcars_pd = pandas2ri.rpy2py(mtcars)
+
+# Create a ggplot
+pp = ggplot2.ggplot(mtcars) + \
+     ggplot2.aes_string(x='wt', y='mpg', color='factor(cyl)') + \
+     ggplot2.geom_point() + \
+     ggplot2.ggtitle('MPG vs Weight by Cylinders')
+
+# Display the plot
+ro.r.X11()
+pp.plot()
+input("Press Enter to continue...")</code></pre>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="community" class="content-section">
+                <h2>Community Resources</h2>
+                <div class="community-grid">
+                    <a href="https://stackoverflow.com/questions/tagged/rpy2" class="community-card">
+                        <h3>Stack Overflow</h3>
+                        <p>Community questions and answers related to rpy2 implementation challenges.</p>
+                        <span class="card-badge">Q&A</span>
+                    </a>
+                    
+                    <a href="https://www.r-bloggers.com/?s=rpy2" class="community-card">
+                        <h3>R-bloggers</h3>
+                        <p>Collection of blog posts discussing rpy2 applications and use cases.</p>
+                        <span class="card-badge">Articles</span>
+                    </a>
+                    
+                    <a href="https://twitter.com/hashtag/rpy2" class="community-card">
+                        <h3>Twitter #rpy2</h3>
+                        <p>Stay updated with community discussions and announcements related to rpy2.</p>
+                        <span class="card-badge">Social</span>
+                    </a>
+                    
+                    <a href="https://github.com/rpy2/rpy2/discussions" class="community-card">
+                        <h3>GitHub Discussions</h3>
+                        <p>Ask questions, share ideas, and connect with other rpy2 users.</p>
+                        <span class="card-badge">Forum</span>
+                    </a>
+                </div>
+                
+                <div class="community-stats">
+                    <div class="stat-card">
+                        <h3>GitHub Stars</h3>
+                        <p class="stat-number">1.2k+</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>PyPI Downloads</h3>
+                        <p class="stat-number">500k+</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Contributors</h3>
+                        <p class="stat-number">50+</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="advanced-topics" class="content-section">
+                <h2>Advanced Topics</h2>
+                <ul>
+                    <li><a href="https://rpy2.github.io/doc/latest/html/robjects_custom.html">Extending rpy2 with Custom Interfaces</a>: Learn how to create custom interfaces for R packages.</li>
+                    <li><a href="https://rpy2.github.io/doc/latest/html/graphics.html">Working with R Graphics in Python</a>: Guide to using R's powerful plotting capabilities (like ggplot2) within Python.</li>
+                    <li><a href="https://rpy2.github.io/doc/latest/html/performance.html">Performance Considerations</a>: Tips for optimizing rpy2 code and understanding memory management between Python and R.</li>
+                </ul>
+                
+                <div class="advanced-topics-grid">
+                    <details class="advanced-topic">
+                        <summary>Memory Management Between Python and R</summary>
+                        <div class="topic-content">
+                            <p>Understanding how rpy2 manages memory between Python and R is crucial for optimal performance. This section explains reference counting, garbage collection, and best practices.</p>
+                            <a href="#" class="learn-more">Learn more →</a>
+                        </div>
+                    </details>
+                    
+                    <details class="advanced-topic">
+                        <summary>Custom Conversion Between Data Types</summary>
+                        <div class="topic-content">
+                            <p>Create custom converters for specialized data types or when working with specific R packages that require special handling.</p>
+                            <a href="#" class="learn-more">Learn more →</a>
+                        </div>
+                    </details>
+                    
+                    <details class="advanced-topic">
+                        <summary>Threading and Parallel Processing</summary>
+                        <div class="topic-content">
+                            <p>Learn about rpy2's thread safety considerations and how to effectively implement parallel processing across Python and R.</p>
+                            <a href="#" class="learn-more">Learn more →</a>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <section id="recent-updates" class="content-section">
+                <h2>Recent Updates</h2>
+                <div class="update-timeline">
+                    <div class="update-item">
+                        <div class="update-date">April 2025</div>
+                        <div class="update-content">
+                            <h3>Version 3.5.17 Released</h3>
+                            <p>Added support for Python 3.12 and R 4.3.x</p>
+                            <a href="https://github.com/rpy2/rpy2/releases" class="release-notes">View release notes</a>
+                        </div>
+                    </div>
+                    
+                    <div class="update-item">
+                        <div class="update-date">March 2025</div>
+                        <div class="update-content">
+                            <h3>Performance Improvements</h3>
+                            <p>Optimized data conversion between large Pandas DataFrames and R data.frames</p>
+                        </div>
+                    </div>
+                    
+                    <div class="update-item">
+                        <div class="update-date">February 2025</div>
+                        <div class="update-content">
+                            <h3>New Documentation</h3>
+                            <p>Complete overhaul of documentation with new examples and improved navigation</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="roadmap">
+                    <h3>Upcoming Features</h3>
+                    <ul class="roadmap-list">
+                        <li>Improved support for R's tidyverse ecosystem</li>
+                        <li>Better integration with Jupyter notebooks</li>
+                        <li>Enhanced error handling and debugging capabilities</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <footer class="content-footer">
+                <p>rpy2 Documentation © 2025 | <a href="https://github.com/rpy2/rpy2">GitHub</a> | <a href="https://pypi.org/project/rpy2/">PyPI</a></p>
+                <p class="version-info">Last updated: April 18, 2025 | Version 3.5.17</p>
+            </footer>
+        </main>
+    </div>
+    
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Get target content ID
+                    const target = button.getAttribute('data-target');
+                    
+                    // Find parent tabs container
+                    const tabsContainer = button.closest('.code-tabs, .installation-tabs');
+                    
+                    // Remove active class from all buttons in this container
+                    tabsContainer.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Remove active class from all content in this container
+                    tabsContainer.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Add active class to target content
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+            
+            // Expandable sections
+            const expandBtns = document.querySelectorAll('.expand-btn');
+            expandBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const section = btn.closest('.expandable-section');
+                    const content = section.querySelector('.expandable-content');
+                    
+                    section.classList.toggle('expanded');
+                    btn.textContent = section.classList.contains('expanded') ? '−' : '+';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
